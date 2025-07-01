@@ -1,60 +1,52 @@
+#include <dirent.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-void printFileData(struct stat);
+#define BUF_SIZE 1024
+
+struct linux_dirent {
+  unsigned long d_ino;
+  unsigned long d_off;
+  unsigned short d_reclen;
+  char d_name[];
+};
 
 int main(int argc, char **argv) {
-  int fd;
-  struct stat statbuf;
+  int fd, nread;
+  int pos = 0;
+  char buf[BUF_SIZE] = {0};
+  struct linux_dirent *_dirent;
 
   if (argc == 1) {
-    fd = open("/", O_RDONLY);
-    if (fstat(fd, &statbuf) < 0) {
-      perror("Failed to get info:");
+    if ((fd = open("/", O_RDONLY | O_DIRECTORY)) < 0) {
+      perror("open");
       exit(1);
     }
   } else {
-    if ((fd = open(argv[1], O_RDONLY)) < 0) {
-      perror("Failed to open:");
-      exit(1);
-    }
-    if (fstat(fd, &statbuf) < 0) {
-      perror("Failed to get info:");
+    if ((fd = open(argv[1], O_RDONLY | O_DIRECTORY)) < 0) {
+      perror("open");
       exit(1);
     }
   }
 
-  printFileData(statbuf);
+  if ((nread = syscall(SYS_getdents, fd, buf, BUF_SIZE)) < 0) {
+    perror("getdents");
+    exit(1);
+  }
 
+  while (pos < nread) {
+    // Set the point _dirent to the address (buf+pos), and let it be recognized
+    // as a pointer to a linux_dirent struct
+    _dirent = (struct linux_dirent *)(buf + pos);
+    printf("%s\n", _dirent->d_name);
+    pos += _dirent->d_reclen;
+  }
+
+  close(fd);
   return 0;
-}
-
-void printFileData(struct stat statbuf) {
-  printf("Inode number: %ld\n", statbuf.st_ino);
-  switch (statbuf.st_mode & S_IFMT) {
-  case S_IFSOCK:
-    printf("File type: %s\n", "socket");
-    break;
-  case S_IFLNK:
-    printf("File type: %s\n", "symbolic link");
-    break;
-  case S_IFREG:
-    printf("File type: %s\n", "regular file");
-    break;
-  case S_IFBLK:
-    printf("File type: %s\n", "block device");
-    break;
-  case S_IFDIR:
-    printf("File type: %s\n", "directory");
-    break;
-  case S_IFCHR:
-    printf("File type: %s\n", "character device");
-    break;
-  case S_IFIFO:
-    printf("File type: %s\n", "FIFO");
-    break;
-  }
-  printf("Total size(bytes): %ld\n", statbuf.st_size);
 }
