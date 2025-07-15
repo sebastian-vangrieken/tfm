@@ -1,6 +1,15 @@
 #include "utils.h"
 #include "variables.h"
+#include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+void SetFileDescriptor(int *fd, char *filePath) {
+    if ((*fd = open(filePath, O_RDONLY | O_DIRECTORY)) < 0) {
+        perror("open");
+        exit(1);
+    }
+}
 
 void SetCursorPosition(struct Point *cursorState, int row, int col) {
     printf("\033[%d;%dH", row, col);

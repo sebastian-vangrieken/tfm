@@ -32,15 +32,9 @@ int main(int argc, char **argv) {
     }
 
     if (argc == 1) {
-        if ((fd = open("/", O_RDONLY | O_DIRECTORY)) < 0) {
-            perror("open");
-            exit(1);
-        }
+        SetFileDescriptor(&fd, "/");
     } else {
-        if ((fd = open(argv[1], O_RDONLY | O_DIRECTORY)) < 0) {
-            perror("open");
-            exit(1);
-        }
+        SetFileDescriptor(&fd, argv[1]);
     }
 
     if ((nread = syscall(SYS_getdents, fd, buf, BUF_SIZE)) < 0) {

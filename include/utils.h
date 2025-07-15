@@ -6,6 +6,7 @@ struct Point {
     int col;
 };
 
+void SetFileDescriptor(int *, char *);
 void SetCursorPosition(struct Point *, int, int);
 void DrawBorder(struct Point *, int, int);
 
