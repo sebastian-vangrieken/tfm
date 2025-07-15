@@ -1,3 +1,4 @@
+#include "utils.h"
 #include <dirent.h>
 #include <fcntl.h>
 #include <stdbool.h>
@@ -18,19 +19,20 @@
 #define VERTICAL_LINE "\u2502"
 #define CLEAR "\033[2J\033[H"
 
-struct linux_dirent {
-    unsigned long d_ino;
-    unsigned long d_off;
-    unsigned short d_reclen;
-    char d_name[];
-};
+// struct linux_dirent {
+//     unsigned long d_ino;
+//     unsigned long d_off;
+//     unsigned short d_reclen;
+//     char d_name[];
+// };
 
-int main(int argc, char **argv) {
-    int fd, nread;
-    int pos = 0;
-    char buf[BUF_SIZE] = {0};
-    struct linux_dirent *_dirent;
+int main() {
+    // int fd, nread;
+    // int pos = 0;
+    // char buf[BUF_SIZE] = {0};
+    // struct linux_dirent *_dirent;
     struct winsize ws;
+    struct Point cursorState = {0, 0};
 
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) < 0) {
         perror("ioctl");
@@ -54,14 +56,13 @@ int main(int argc, char **argv) {
             fflush(stdout);
 
             for (int i = 2; i < ws.ws_row; i++) {
-                printf("\033[%d;1H", i);
+                SetCursorPosition(&cursorState, i, 1);
                 printf("%s", VERTICAL_LINE);
-                printf("\033[%d;%dH", i, ws.ws_col);
+                SetCursorPosition(&cursorState, i, ws.ws_col);
                 printf("%s", VERTICAL_LINE);
                 fflush(stdout);
             }
-            printf("\033[%d;1H", ws.ws_row);
-            fflush(stdout);
+            SetCursorPosition(&cursorState, ws.ws_row, 1);
 
             printf("%s", BOTTOM_LEFT_CORNER);
             fflush(stdout);
