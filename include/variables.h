@@ -8,6 +8,10 @@
 #define BOTTOM_RIGHT_CORNER "\u2518"
 #define HORIZONTAL_LINE "\u2500"
 #define VERTICAL_LINE "\u2502"
+#define VERTICAL_RIGHT "\u251C"
+#define VERTICAL_LEFT "\u2524"
+#define HORIZONTAL_DOWN "\u252C"
+#define HORIZONTAL_UP "\u2534"
 #define CLEAR "\033[2J\033[H"
 
 #endif

@@ -51,36 +51,7 @@ int main(int argc, char **argv) {
     bool changed = true;
     while (1) {
         if (changed) {
-            printf("%s", CLEAR);
-            fflush(stdout);
-
-            printf("%s", TOP_LEFT_CORNER);
-            fflush(stdout);
-            for (int i = 2; i < ws.ws_col; i++) {
-                printf("%s", HORIZONTAL_LINE);
-                fflush(stdout);
-            }
-            printf("%s", TOP_RIGHT_CORNER);
-            fflush(stdout);
-
-            for (int i = 2; i < ws.ws_row; i++) {
-                SetCursorPosition(&cursorState, i, 1);
-                printf("%s", VERTICAL_LINE);
-                SetCursorPosition(&cursorState, i, ws.ws_col);
-                printf("%s", VERTICAL_LINE);
-                fflush(stdout);
-            }
-            SetCursorPosition(&cursorState, ws.ws_row, 1);
-
-            printf("%s", BOTTOM_LEFT_CORNER);
-            fflush(stdout);
-            for (int i = 2; i < ws.ws_col; i++) {
-                printf("%s", HORIZONTAL_LINE);
-                fflush(stdout);
-            }
-            printf("%s", BOTTOM_RIGHT_CORNER);
-            fflush(stdout);
-
+            DrawBorder(&cursorState, ws.ws_row, ws.ws_col);
             int i = 3, j = 3;
             SetCursorPosition(&cursorState, i, j);
             while (pos < nread) {
