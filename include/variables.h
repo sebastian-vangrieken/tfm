@@ -1,0 +1,13 @@
+#ifndef VARIABLES_H
+#define VARIABLES_H
+
+#define BUF_SIZE 1024
+#define TOP_LEFT_CORNER "\u250C"
+#define TOP_RIGHT_CORNER "\u2510"
+#define BOTTOM_LEFT_CORNER "\u2514"
+#define BOTTOM_RIGHT_CORNER "\u2518"
+#define HORIZONTAL_LINE "\u2500"
+#define VERTICAL_LINE "\u2502"
+#define CLEAR "\033[2J\033[H"
+
+#endif
