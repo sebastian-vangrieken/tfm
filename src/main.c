@@ -42,23 +42,37 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    bool changed = true;
+    DrawBorder(&cursorState, ws.ws_row, ws.ws_col);
     while (1) {
-        if (changed) {
-            DrawBorder(&cursorState, ws.ws_row, ws.ws_col);
-            int i = 3, j = 3;
-            SetCursorPosition(&cursorState, i, j);
-            while (pos < nread) {
-                // Set the point _dirent to the address (buf+pos), and let it be
-                // recognized as a pointer to a linux_dirent struct
-                _dirent = (struct linux_dirent *)(buf + pos);
-                printf("%s", _dirent->d_name);
-                pos += _dirent->d_reclen;
-                i += 1;
-                SetCursorPosition(&cursorState, i, j);
-            }
+        // char input;
+        // scanf("%c", &input);
+        //
+        // switch (input) {
+        // case ':':
+        //     SetCursorPosition(&cursorState, ws.ws_row - 1, 2);
+        //     break;
+        // case 'h':
+        //     break;
+        // case 'j':
+        //     break;
+        // case 'k':
+        //     break;
+        // case 'l':
+        //     break;
+        // default:
+        //     break;
+        // }
 
-            changed = false;
+        int i = 3, j = 3;
+        SetCursorPosition(&cursorState, i, j);
+        while (pos < nread) {
+            // Set the point _dirent to the address (buf+pos), and let it be
+            // recognized as a pointer to a linux_dirent struct
+            _dirent = (struct linux_dirent *)(buf + pos);
+            printf("%s", _dirent->d_name);
+            pos += _dirent->d_reclen;
+            i += 1;
+            SetCursorPosition(&cursorState, i, j);
         }
     }
 
